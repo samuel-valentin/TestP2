@@ -3,11 +3,7 @@
 *	This is the data memory for the RISC-V processor
 *	1.0
 * Author:
-*	Dr. José Luis Pizano Escalante
-* email:
-*	luispizano@iteso.mx
-* Date:
-*	16/08/2021
+*	Samuel Valentin Lopez Valenzuela
 ******************************************************************/
 
 module Data_Memory 

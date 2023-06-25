@@ -12,12 +12,12 @@
 *	16/08/2021
 ******************************************************************/
 
-module Tarea_TB;		//Cambiar por nombre del archivo y este se tiene que llamar como el proyecto
+module TestP2_TB;		//Cambiar por nombre del archivo y este se tiene que llamar como el proyecto
 reg clk_tb = 0;
 reg reset_tb = 0;  
   
   
-Tarea					//Cambiar por nombre del archivo y este se tiene que llamar como el proyecto
+TestP2					//Cambiar por nombre del archivo y este se tiene que llamar como el proyecto
 DUV
 (
 	.clk(clk_tb),

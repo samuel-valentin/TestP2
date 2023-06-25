@@ -1,23 +1,9 @@
 /******************************************************************
 * Description
-*	This is the top-level of a RISC-V Microprocessor that can execute the next set of instructions:
-*		add
-*		addi
-* This processor is written Verilog-HDL. It is synthesizabled into hardware.
-* Parameter MEMORY_DEPTH configures the program memory to allocate the program to
-* be executed. If the size of the program changes, thus, MEMORY_DEPTH must change.
-* This processor was made for computer organization class at ITESO.
-* Version:
-*	1.0
-* Author:
-*	Dr. José Luis Pizano Escalante
-* email:
-*	luispizano@iteso.mx
-* Date:
-*	16/08/2021
+* Implementation of RISCV by ne
 ******************************************************************/
 
-module Tarea		//Cambiar por nombre del archivo y este se tiene que llamar como el proyecto
+module TestP2		//Cambiar por nombre del archivo y este se tiene que llamar como el proyecto
 #(
 	parameter PROGRAM_MEMORY_DEPTH = 64,
 	parameter DATA_MEMORY_DEPTH = 128
@@ -47,6 +33,7 @@ wire [2:0] alu_op_w;
 /** Program Counter**/
 wire [31:0] pc_plus_4_w;
 wire [31:0] pc_w;
+wire [31:0] pc_plus_imm_w;
 
 
 /**Register File**/
@@ -58,6 +45,7 @@ wire [31:0] inmmediate_data_w;
 
 /**ALU**/
 wire [31:0] alu_result_w;
+wire [31:0] alu_zero_w;
 
 /**Multiplexer MUX_DATA_OR_IMM_FOR_ALU**/
 wire [31:0] read_data_2_or_imm_w;
@@ -116,8 +104,16 @@ PC_PLUS_4
 	
 	.Result(pc_plus_4_w)
 );
-
-
+/*
+Adder_32_Bits
+PC_PLUS_IMM
+(
+	.Data0(pc_w),
+	.Data1(inmmediate_data_w),
+	
+	.Result(pc_plus_imm_w)
+);
+*/
 //******************************************************************/
 //******************************************************************/
 //******************************************************************/
@@ -165,7 +161,48 @@ MUX_DATA_OR_IMM_FOR_ALU
 	.Mux_Output_o(read_data_2_or_imm_w)
 
 );
+/*
+Multiplexer_2_to_1
+#(
+	.NBits(32)
+)
+MUX_DATA_M_IMM_FOR_ALU
+(
+	.Selector_i(mem_to_reg_w),
+	.Mux_Data_0_i(alu_result_w),
+	.Mux_Data_1_i(read_data_m_w),
+	
+	.Mux_Output_o(read_data_m_or_alu_result_w)
 
+);
+
+Multiplexer_2_to_1
+#(
+	.NBits(32)
+)
+MUX_PC_OR_RS1_IMM
+(
+	.Selector_i((instruction_bus_w[6:0] == 7'h67)? 1'b1 : 0),
+	.Mux_Data_0_i(pc_w),
+	.Mux_Data_1_i(read_data_1_w),
+	
+	.Mux_Output_o(pc_temp_w)
+
+);
+
+Multiplexer_2_to_1
+#(
+	.NBits(32)
+)
+MUX_PC_4_OR_PC_IMM
+(
+	.Selector_i(branch_w & alu_zero_w),
+	.Mux_Data_0_i(pc_plus_4_w),
+	.Mux_Data_1_i(pc_plus_imm_w),
+	
+	.Mux_Output_o(pc_next_w)
+);
+*/	
 
 ALU_Control
 ALU_CONTROL_UNIT
@@ -178,18 +215,29 @@ ALU_CONTROL_UNIT
 );
 
 
-
 ALU
 ALU_UNIT
 (
 	.ALU_Operation_i(alu_operation_w),
 	.A_i(read_data_1_w),
 	.B_i(read_data_2_or_imm_w),
+	.Zero_o(alu_zero_w),
 	.ALU_Result_o(alu_result_w)
 );
-
-
-
+/*
+Data_Memory
+#(
+	.DATA_WIDTH(32)
+)
+DATA_MEMORY_UNIT
+(
+	.clk(clk),
+	.Mem_Write_i(mem_write_w),
+	.Write_Data_i(read_data_2_w),
+	.Address_i(alu_result_w),
+	
+	.Read_Data_o(read_data_m_w)
+);
+*/
 
 endmodule
-
