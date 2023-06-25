@@ -24,12 +24,12 @@ always@(op_i, Instruction_bus_i) begin
 	else if(op_i == 7'h37)
 		Immediate_o = {{12{Instruction_bus_i[31]}},Instruction_bus_i[31:12]};// U format
 	
-	else if(op_i == 7'h23)
+/*	else if(op_i == 7'h23)
 		Immediate_o = {{20{Instruction_bus_i[31]}},Instruction_bus_i[31:25],Instruction_bus_i[11:7]};// S format
 	
 	else if(op_i == 7'h63)
 		Immediate_o = {{20{Instruction_bus_i[31]}},Instruction_bus_i[31],Instruction_bus_i[7],Instruction_bus_i[30:25],Instruction_bus_i[11:8]};// B format
-	
+*/	
 	else
 		Immediate_o = 0;// U format
 end
