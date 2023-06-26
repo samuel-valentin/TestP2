@@ -3,12 +3,16 @@
 *	This is the data memory for the RISC-V processor
 *	1.0
 * Author:
-*	Samuel Valentin Lopez Valenzuela
+*	Dr. José Luis Pizano Escalante
+* email:
+*	luispizano@iteso.mx
+* Date:
+*	16/08/2021
 ******************************************************************/
 
 module Data_Memory 
-#(	parameter DATA_WIDTH = 8,
-	parameter MEMORY_DEPTH = 1024
+#(	parameter DATA_WIDTH = 32,
+	parameter MEMORY_DEPTH = 256
 
 )
 (

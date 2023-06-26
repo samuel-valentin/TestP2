@@ -5,15 +5,19 @@
 * Version:
 *	1.0
 * Author:
-*	Samuel Valetnin Lopez Valenzuela
+*	Dr. José Luis Pizano Escalante
+* email:
+*	luispizano@iteso.mx
+* Date:
+*	16/08/2021
 ******************************************************************/
 
-module TestP2_TB;		//Cambiar por nombre del archivo y este se tiene que llamar como el proyecto
+module Tarea_TB;		//Cambiar por nombre del archivo y este se tiene que llamar como el proyecto
 reg clk_tb = 0;
 reg reset_tb = 0;  
   
   
-TestP2					//Cambiar por nombre del archivo y este se tiene que llamar como el proyecto
+Tarea					//Cambiar por nombre del archivo y este se tiene que llamar como el proyecto
 DUV
 (
 	.clk(clk_tb),

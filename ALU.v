@@ -7,10 +7,7 @@
 * Version:
 *	1.0
 * Author:
-*	Dr. José Luis Pizano Escalante
-* email:
-*	luispizano@iteso.mx
-* Date:
+*	Samuel Valentin Lopez Valenzuela
 *	16/08/2021
 ******************************************************************/
 
@@ -23,18 +20,27 @@ module ALU
 	output reg [31:0] ALU_Result_o
 );
 
+///////////////////////////////////////////////////////////////////
+//Variables////////////////////////////////////////////////////////
+
 localparam ADD = 4'b0000;
-localparam OR  = 4'b0101;
-localparam SUB = 4'b0001;
-localparam SLLI = 4'b1000;
-localparam SRLI = 4'b1010;
-localparam LUI = 4'b0111;
-/*
-localparam SLL = 4'b1000; 
-localparam SRL = 4'b1010;
-localparam XOR = 4'b0110;
-localparam AND = 4'b0100;
-*/
+localparam OR  = 4'b0011;
+localparam SUB  = 4'b0001;
+localparam SLL = 4'b0100;
+localparam SRL = 4'b0101; 
+localparam LUI  = 4'b0010; 
+
+localparam AND	 = 4'b0110;
+localparam XOR  = 4'b0111;
+localparam BEQ  = 4'b1000;
+localparam BNE  = 4'b1001;
+localparam BLT  = 4'b1010;
+localparam SW   = 4'b1011;
+localparam LW   = 4'b1100;
+localparam JAL  = 4'b1101;
+localparam JALR = 4'b1110;
+
+///////////////////////////////////////////////////////////////////
    
    always @ (A_i or B_i or ALU_Operation_i)
      begin
@@ -48,32 +54,46 @@ localparam AND = 4'b0100;
 		SUB:
 			ALU_Result_o = A_i - B_i;
 			
-		SLLI:
-			ALU_Result_o = A_i << B_i[4:0];
-			
-		SRLI:
-			ALU_Result_o = A_i >> B_i[4:0];
+		SLL:
+			ALU_Result_o = A_i << B_i;
+		
+		SRL:
+			ALU_Result_o = A_i >> B_i;
 			
 		LUI:
-			//ALU_Result_o = A_i << B_i[12:0];
-			ALU_Result_o = A_i[31:12] << 12'b0;
-			//ALU_Result_o = {B_i[31:12], 12'b0};
-			
-/*		SRL:
-			ALU_Result_o = A_i >> B_i[4:0];
-
-		SLL:
-			ALU_Result_o = A_i << B_i[4:0];
-			
-		XOR:
-			ALU_Result_o = A_i ^ B_i;
-			
-		AND:
-			ALU_Result_o = A_i & B_i;	
-*/
+			ALU_Result_o = B_i << 12;
 	
+		AND:										
+			ALU_Result_o = A_i & B_i;
+			
+		XOR:										
+			ALU_Result_o = A_i ^ B_i;
+				
+		BEQ:
+			ALU_Result_o = (A_i == B_i) ? 0: 1 ;
+				
+		BNE:
+			ALU_Result_o = (A_i - B_i != 0) ? 0 : 1;
+			
+		BLT:
+			ALU_Result_o = (A_i < B_i) ? 0 : 1;
+			
+		SW:
+			ALU_Result_o = ( A_i + B_i );
+				
+		LW:
+			ALU_Result_o = ( A_i + B_i );
+				
+		JAL:
+			ALU_Result_o =  A_i;
+			
+		JALR:
+			ALU_Result_o = A_i + B_i;	
+
+
 		default:
 			ALU_Result_o = 0;
+			
 		endcase // case(control)
 		
 		Zero_o = (ALU_Result_o == 0) ? 1'b1 : 1'b0;

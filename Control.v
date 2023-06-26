@@ -18,38 +18,48 @@ module Control
 	output Mem_Write_o,
 	output ALU_Src_o,
 	output Reg_Write_o,
-	output [2:0]ALU_Op_o
+	output [2:0]ALU_Op_o,
+
+	output jal_o,
+	output jalr_o
+
 );
 
 
-localparam R_Type = 7'h33;											
-localparam I_Type_LOGIC = 7'h13;
-localparam U_Type = 7'h37;	//lui
+localparam R_Type			 = 7'h33;  //R
+localparam I_Type_LOGIC  = 7'h13;  //I logicas
+localparam U_Type        = 7'h37;  //LUI
 
-/*localparam S_Type = 7'h23;	//sw
-localparam I_Type_LOAD = 7'h03;	//lw
-localparam B_Type = 7'h63;
-localparam J_Type = 7'h6F;	//jal
-localparam I_Type_JUMP = 7'h67;	//jalr
-*/
-reg [8:0] control_values;
+localparam B_Type		    = 7'h63;  //BRANCHES
+localparam S_Type		    = 7'h23;  // S types -> SW
+localparam I_Type_L		 = 7'h03;  // LW
+localparam J_Type		    = 7'h6F;  //JAL
+localparam I_Type_J  	 = 7'h67;  //JALR
+
+
+reg [10:0] control_values;
 
 always@(OP_i) begin
-	case(OP_i)//                           876_54_3_210
-		R_Type: 		  control_values = 	9'b001_00_0_000;
-		I_Type_LOGIC: control_values = 	9'b001_00_1_001;
-		U_Type: 		  control_values = 	9'b011_00_1_001;	//
-/*		
-		S_Type:		  control_values =	9'b000_01_1_011;
-		I_Type_LOAD:  control_values =	9'b011_00_1_100;
-		B_Type:		  control_values =	9'b100_00_0_101;
-		J_Type:		  control_values =	9'b101_00_0_110;
-		I_Type_JUMP:  control_values =	9'b101_00_1_111;
-*/
+	case(OP_i)//                          	10-9-876_54_3_210
+								
+		R_Type:				control_values=11'b0_0_001_00_0_000;  // R
+		I_Type_LOGIC:		control_values=11'b0_0_001_00_1_001;  // I logicas
+		U_Type:				control_values=11'b0_0_001_00_1_010;  // LUI
+	
+		B_Type:				control_values=11'b0_0_100_00_0_011;  // BRANCHES
+		S_Type:				control_values=11'b0_0_010_01_1_100;  // SW
+		I_Type_L:			control_values=11'b0_0_011_10_1_101;  // LW
+		J_Type:				control_values=11'b0_1_101_00_1_110;  // JAL	
+		I_Type_J:			control_values=11'b1_1_001_00_1_111;  // JALR
+	
 		default:
-			control_values= 9'b000_00_000;
+			control_values= 10'b0_000_00_000;
 		endcase
-end
+end	
+
+assign jalr_o = control_values[10];
+
+assign jal_o = control_values[9];
 
 assign Branch_o = control_values[8];
 
@@ -66,5 +76,3 @@ assign ALU_Src_o = control_values[3];
 assign ALU_Op_o = control_values[2:0];	
 
 endmodule
-
-
